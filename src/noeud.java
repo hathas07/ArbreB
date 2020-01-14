@@ -1,5 +1,4 @@
-
-public class noeud{
+public class noeud {
 
     int NbCles;
     int [] tabCles;
