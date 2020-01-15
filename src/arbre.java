@@ -36,21 +36,34 @@ public class arbre {
         return null;
     }
 
+    private noeud diviserRemonter(noeud Arbre){
+        if(Arbre.getNbCles() == 2*M){
+            noeud fils = new noeud(2*M);
+            Arbre.pere = Inserer(Arbre.tabCles[M],Arbre.pere);
+
+            for(int i = M+1 ; i < 2*M ; i++){
+                fils.tabCles[i-M] = Arbre.tabCles[i];
+                fils.tabPointeur[i-M] = Arbre.tabPointeur[i];
+            }
+        }
+        return Arbre;
+    }
+
     private noeud Inserer(Object Cles, noeud Arbre){
         if(Arbre.feuille){
             Arbre = InsererDsFeuille(Cles, Arbre);
             if(Arbre.getNbCles() == 2*M){
-
+                Arbre.pere = diviserRemonter(Arbre);
             }
         }
         return null;
     }
     private static void AfficherArbre(noeud Arbre) {
         int indice = 0;
-    while (indice < Arbre.tabCles.length){
-        System.out.print(Arbre.tabCles[indice]);
-        indice++;
-    }
+        while (indice < Arbre.tabCles.length){
+            System.out.print(Arbre.tabCles[indice]);
+            indice++;
+        }
     }
 
     public static void main(String[] args){
