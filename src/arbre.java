@@ -21,25 +21,28 @@ public class arbre {
         return null;
     }
 
-    private noeud InsererDsFeuille(Object Cles, noeud Feuille){
-        if(Feuille.feuille){
-            Object Clestemp = 0;
-            Comparator c = null;
-            for(int i = 0;  i < Feuille.tabCles.length; i++){
-                if(c.compare(Cles,Feuille.tabCles[i]) <= 0){
-                    Clestemp = Feuille.tabCles[i];
-                    Feuille.tabCles[i] = Cles;
-                    Cles = Clestemp;
-                }
+    private noeud InsererDsTab(Object Cles, noeud Arbre){
+        Object Clestemp = 0;
+        noeud Pointeurtemp1 = null;
+        noeud Pointeurtemp2 = null;
+        Comparator c = null;
+        for(int i = 0;  i < Arbre.tabCles.length; i++){
+            if(c.compare(Cles,Arbre.tabCles[i]) <= 0){
+                Clestemp = Arbre.tabCles[i];
+                Arbre.tabCles[i] = Cles;
+                Cles = Clestemp;
+
+                Pointeurtemp1 = Arbre.tabPointeur[i+1];
+                Arbre.tabPointeur[i+1] = Pointeurtemp2;
+                Pointeurtemp2 = Pointeurtemp1;
             }
-            return Feuille;
         }
-        return null;
+        return Arbre;
     }
 
     private noeud diviserRemonter(noeud Arbre){
         if(Arbre.getNbCles() == 2*M+1){
-            noeud fils = new noeud(2*M);        //Creation d'un fils en plus du pere et de l'arbre actuel
+            noeud fils = new noeud(M);        //Creation d'un fils en plus du pere et de l'arbre actuel
             fils.pere = Arbre.pere;
             Arbre.pere = Inserer(Arbre.tabCles[M],Arbre.pere);      //On insere la valeur médiane dans le père
 
@@ -59,7 +62,7 @@ public class arbre {
 
     private noeud Inserer(Object Cles, noeud Arbre){
         if(Arbre.feuille){
-            Arbre = InsererDsFeuille(Cles, Arbre);
+            Arbre = InsererDsTab(Cles, Arbre);
             if(Arbre.getNbCles() == 2*M+1){
                 Arbre = diviserRemonter(Arbre);
             }

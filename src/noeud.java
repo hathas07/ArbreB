@@ -10,7 +10,7 @@ public class noeud {
     public noeud(int M){
         NbCles = 0;
         tabCles = new Object [2*M+1];
-        tabPointeur = new noeud[2*M+1];
+        tabPointeur = new noeud[2*M+2];
         feuille = true;
         pere = null;
     }
