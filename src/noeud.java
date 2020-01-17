@@ -1,15 +1,24 @@
 import java.util.*;
 public class noeud {
 
+    public static class Cles{
+        int Id;
+        Object Contenue;
+
+        public Cles(int Identifiant, Object objet){
+            Id = Identifiant;
+            Contenue = objet;
+        }
+    }
     int NbCles;
-    Object [] tabCles;
+    Cles [] tabCles;
     noeud [] tabPointeur;
     boolean feuille;
     noeud pere;
 
     public noeud(int M){
         NbCles = 0;
-        tabCles = new Object [2*M+1];
+        tabCles = new Cles [2*M+1];
         tabPointeur = new noeud[2*M+2];
         feuille = true;
         pere = null;

@@ -8,15 +8,13 @@ public class arbre {
 
     /* ~~~~~~~~ FONCTIONS DE RECHERCHE ~~~~~~~~ */
 
-    private static noeud RechercherArbre(Object Valeur, noeud Arbre) {
+    private static noeud RechercherArbre(noeud.Cles Valeur, noeud Arbre) {
         int indice = 0;
         noeud resultat = Arbre;
-        Comparator c = null;
         if (Arbre.getfeuille() != true) {
 
-            while (indice < Arbre.NbCles && c.compare(Valeur,Arbre.tabCles[indice]) < 0) {
+            while (indice < Arbre.NbCles && Valeur.Id < Arbre.tabCles[indice].Id) {
                 indice++;
-
             }
             if(Arbre.tabPointeur[indice] != null){
                 resultat = RechercherArbre(Valeur, Arbre.tabPointeur[indice]);
@@ -26,10 +24,9 @@ public class arbre {
         return resultat;
     }
 
-    private static int RechercherDansNoeud(Object Valeur, noeud Arbre){
+    private static int RechercherDansNoeud(int Valeur, noeud Arbre){
         int i = 0;
-        Comparator c = null;
-        while(c.compare(Valeur,Arbre.tabCles[i]) > 0){
+        while( Valeur < Arbre.tabCles[i].Id){
             i++;
         }
         return i;
@@ -37,7 +34,7 @@ public class arbre {
 
     /* ~~~~~~~~ FONCTIONS D'INSERTION ET DE MODIFICATION DE L'ARBRE ~~~~~~~~ */
 
-    private static noeud Inserer(Object Cles, noeud Arbre){
+    private static noeud Inserer(noeud.Cles Cles, noeud Arbre){
         Arbre = RechercherArbre(Cles, Arbre);
         InsererDsTab(Cles, Arbre);
         if(Arbre.NbCles == 2*M+1){
@@ -50,23 +47,13 @@ public class arbre {
         return Arbre;
     }
 
-    private static noeud InsererDsTab(Object Cles, noeud Arbre){
-        Object Clestemp = 0;
+    private static noeud InsererDsTab(noeud.Cles Cles, noeud Arbre){
+        noeud.Cles Clestemp = null;
         noeud Pointeurtemp1 = null;
         noeud Pointeurtemp2 = null;
-        Comparator c = null;
 
         for(int i = 0 ;  i < 2*M+1 ; i++){
-            // System.out.print("Cle : " + Arbre.tabCles[i]);
-            // System.out.println("   Null " + i);
-            if(Arbre.tabCles[i] != null && Cles != null){
-                System.out.println("Valeur " + Arbre.tabCles[i]);
-                System.out.println("Cles " + Cles);
-                int r = c.compare(Cles,Arbre.tabCles[i]);
-                System.out.println("r =" + r);
-            }
-            System.out.println("t");
-            if(Arbre.NbCles <= i)
+            if(Arbre.NbCles <= i || Cles.Id < Arbre.tabCles[i].Id)
             {
                 Clestemp = Arbre.tabCles[i];
                 Arbre.tabCles[i] = Cles;
@@ -76,7 +63,7 @@ public class arbre {
                 Arbre.tabPointeur[i+1] = Pointeurtemp2;
                 Pointeurtemp2 = Pointeurtemp1;
             }
-            else if(c.compare(Cles,Arbre.tabCles[i]) < 0){
+            /*else if(Cles.Id < Arbre.tabCles[i].Id){
                 Clestemp = Arbre.tabCles[i];
                 Arbre.tabCles[i] = Cles;
                 Cles = Clestemp;
@@ -84,7 +71,7 @@ public class arbre {
                 Pointeurtemp1 = Arbre.tabPointeur[i+1];
                 Arbre.tabPointeur[i+1] = Pointeurtemp2;
                 Pointeurtemp2 = Pointeurtemp1;
-            }
+            }*/
         }
 
         Arbre.NbCles++;
@@ -104,7 +91,7 @@ public class arbre {
             Arbre.pere = Inserer(Arbre.tabCles[M],Arbre.pere);      //On insere la valeur médiane dans le père
             Arbre.tabCles[M] = null;
 
-            for(int i = M+1 ; i <= 2*M+1 ; i++){           //Le nouveau fils accueille la partie droite de l'arbre divisé
+            for(int i = M+1 ; i < 2*M+1 ; i++){           //Le nouveau fils accueille la partie droite de l'arbre divisé
                 fils.tabCles[i-M] = Arbre.tabCles[i];
                 Arbre.tabCles[i] = null;
 
@@ -124,8 +111,8 @@ public class arbre {
             Arbre.NbCles = M;
             Arbre.pere.NbCles++;
 
-            Arbre.tabPointeur[RechercherDansNoeud(Arbre.tabCles[M], Arbre.pere)+1] = fils;
-            Arbre.tabPointeur[RechercherDansNoeud(Arbre.tabCles[M], Arbre.pere)+1].feuille = false;
+            Arbre.tabPointeur[RechercherDansNoeud(Arbre.tabCles[M].Id, Arbre.pere)+1] = fils;
+            Arbre.tabPointeur[RechercherDansNoeud(Arbre.tabCles[M].Id, Arbre.pere)+1].feuille = false;
         }
         return Arbre.pere;
     }
@@ -135,7 +122,7 @@ public class arbre {
     private static void AfficherArbre(noeud Arbre) {
         System.out.println("");
         for(int i = 0 ; i < Arbre.NbCles ; i++){
-            System.out.print(Arbre.tabCles[i]+" ");
+            System.out.print("|" + Arbre.tabCles[i].Id+" " + Arbre.tabCles[i].Contenue + "|  ");
         }
         for(int i = 0 ; i < Arbre.NbCles ; i++){
             if(Arbre.tabPointeur[i] != null){
@@ -149,18 +136,16 @@ public class arbre {
     public static void main(String[] args){
         M = 2;
         noeud Racine = new noeud(M);
-        Racine = Inserer(15,Racine);
-        Racine = Inserer(21,Racine);
-        //Racine = Inserer(2081,Racine);
-        //Racine = Inserer(9,Racine);
-        //Racine = Inserer(0.52,Racine);
-        //Racine = Inserer(6,Racine);
-        /*Racine.tabCles[0] = 3;
-        Racine.tabCles[1] = 3;
-        Racine.tabCles[2] = 3;
-        Racine.tabCles[3] = 3;
-        Racine.tabCles[4] = 3.14;
-        Racine.NbCles = 5;*/
+
+        Racine = Inserer(new noeud.Cles(15,"Chalut"),Racine);
+        Racine = Inserer(new noeud.Cles(21,"Chalut"),Racine);
+        Racine = Inserer(new noeud.Cles(1,"Chalut"),Racine);
+        Racine = Inserer(new noeud.Cles(202,"Chalut"),Racine);
+        Racine = Inserer(new noeud.Cles(2501,"Chalut"),Racine);
+        Racine = Inserer(new noeud.Cles(9,"Chalut"),Racine);
+        Racine = Inserer(new noeud.Cles(7,"Chalut"),Racine);
+
+
         AfficherArbre(Racine);
     }
 }
