@@ -49,11 +49,13 @@ public class arbre {
 
     private static noeud InsererDsTab(noeud.Cles Cles, noeud Arbre){
         noeud.Cles Clestemp = null;
-        noeud Pointeurtemp1 = null;
-        noeud Pointeurtemp2 = null;
+        noeud Pointeurtemp1, Pointeurtemp2 = null;
 
         for(int i = 0 ;  i < 2*M+1 ; i++){
-            if(Arbre.NbCles <= i || Cles.Id < Arbre.tabCles[i].Id)
+            System.out.println("NbdeCle : " + Arbre.NbCles + "  i : " + i);
+            if(Cles != null)System.out.println(Cles.Id);
+            //System.out.println(Arbre.tabCles[i].Id);
+            if(Arbre.NbCles <= i)
             {
                 Clestemp = Arbre.tabCles[i];
                 Arbre.tabCles[i] = Cles;
@@ -63,7 +65,7 @@ public class arbre {
                 Arbre.tabPointeur[i+1] = Pointeurtemp2;
                 Pointeurtemp2 = Pointeurtemp1;
             }
-            /*else if(Cles.Id < Arbre.tabCles[i].Id){
+            else if(Cles.Id < Arbre.tabCles[i].Id){
                 Clestemp = Arbre.tabCles[i];
                 Arbre.tabCles[i] = Cles;
                 Cles = Clestemp;
@@ -71,7 +73,7 @@ public class arbre {
                 Pointeurtemp1 = Arbre.tabPointeur[i+1];
                 Arbre.tabPointeur[i+1] = Pointeurtemp2;
                 Pointeurtemp2 = Pointeurtemp1;
-            }*/
+            }
         }
 
         Arbre.NbCles++;
@@ -80,7 +82,8 @@ public class arbre {
 
     private static noeud diviserRemonter(noeud Arbre){
         if(Arbre.getNbCles() == 2*M+1){
-            if(Arbre.pere == null){
+            int IdM = Arbre.tabCles[M].Id;
+            if(Arbre.pere == null){         //On cree un père si besoin
                 noeud pere = new noeud(M);
                 Arbre.feuille = false;
                 Arbre.pere = pere;
@@ -88,13 +91,20 @@ public class arbre {
 
             noeud fils = new noeud(M);        //Creation d'un fils en plus du pere et de l'arbre actuel
             fils.pere = Arbre.pere;
-            Arbre.pere = Inserer(Arbre.tabCles[M],Arbre.pere);      //On insere la valeur médiane dans le père
+
+
+            //Arbre.pere = Inserer(Arbre.tabCles[M],Arbre.pere);      //On insere la valeur médiane dans le père
+            InsererDsTab(Arbre.tabCles[M], Arbre.pere);
+            if(Arbre.pere.NbCles == 2*M+1){
+                Arbre.pere = diviserRemonter(Arbre.pere);
+            }
+
             Arbre.tabCles[M] = null;
 
             for(int i = M+1 ; i < 2*M+1 ; i++){           //Le nouveau fils accueille la partie droite de l'arbre divisé
                 fils.tabCles[i-M] = Arbre.tabCles[i];
                 Arbre.tabCles[i] = null;
-
+    
                 fils.tabPointeur[i-M] = Arbre.tabPointeur[i];
                 Arbre.tabPointeur[i] = null;
             }
@@ -109,10 +119,8 @@ public class arbre {
 
             fils.NbCles = M;
             Arbre.NbCles = M;
-            Arbre.pere.NbCles++;
 
-            Arbre.tabPointeur[RechercherDansNoeud(Arbre.tabCles[M].Id, Arbre.pere)+1] = fils;
-            Arbre.tabPointeur[RechercherDansNoeud(Arbre.tabCles[M].Id, Arbre.pere)+1].feuille = false;
+            Arbre.pere.tabPointeur[RechercherDansNoeud(IdM, Arbre.pere)+1] = fils;
         }
         return Arbre.pere;
     }
