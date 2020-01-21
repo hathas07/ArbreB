@@ -13,7 +13,7 @@ public class arbre {
         noeud resultat = Arbre;
         if (Arbre.getfeuille() != true) {
 
-            while (indice < Arbre.NbCles && Valeur.Id < Arbre.tabCles[indice].Id) {
+            while (indice < Arbre.NbCles && Valeur.Id > Arbre.tabCles[indice].Id) {
                 indice++;
             }
             if(Arbre.tabPointeur[indice] != null){
@@ -26,7 +26,7 @@ public class arbre {
 
     private static int RechercherDansNoeud(int Valeur, noeud Arbre){
         int i = 0;
-        while( Valeur < Arbre.tabCles[i].Id){
+        while( Valeur != Arbre.tabCles[i].Id){
             i++;
         }
         return i;
@@ -85,7 +85,8 @@ public class arbre {
             int IdM = Arbre.tabCles[M].Id;
             if(Arbre.pere == null){         //On cree un père si besoin
                 noeud pere = new noeud(M);
-                Arbre.feuille = false;
+                pere.feuille = false;
+                pere.tabPointeur[0] = Arbre;
                 Arbre.pere = pere;
             }
 
@@ -102,7 +103,7 @@ public class arbre {
             Arbre.tabCles[M] = null;
 
             for(int i = M+1 ; i < 2*M+1 ; i++){           //Le nouveau fils accueille la partie droite de l'arbre divisé
-                fils.tabCles[i-M] = Arbre.tabCles[i];
+                fils.tabCles[i-M-1] = Arbre.tabCles[i];
                 Arbre.tabCles[i] = null;
     
                 fils.tabPointeur[i-M] = Arbre.tabPointeur[i];
@@ -132,7 +133,7 @@ public class arbre {
         for(int i = 0 ; i < Arbre.NbCles ; i++){
             System.out.print("|" + Arbre.tabCles[i].Id+" " + Arbre.tabCles[i].Contenue + "|  ");
         }
-        for(int i = 0 ; i < Arbre.NbCles ; i++){
+        for(int i = 0 ; i <= Arbre.NbCles ; i++){
             if(Arbre.tabPointeur[i] != null){
                 AfficherArbre(Arbre.tabPointeur[i]);
             }
@@ -152,8 +153,24 @@ public class arbre {
         Racine = Inserer(new noeud.Cles(2501,"Chalut"),Racine);
         Racine = Inserer(new noeud.Cles(9,"Chalut"),Racine);
         Racine = Inserer(new noeud.Cles(7,"Chalut"),Racine);
+        Racine = Inserer(new noeud.Cles(9999,"Chalut"),Racine);
+        Racine = Inserer(new noeud.Cles(752,"Chalut"),Racine);
+        Racine = Inserer(new noeud.Cles(7152,"Chalut"),Racine);
+        //OK
+
+        Racine = Inserer(new noeud.Cles(3,"Chalut"),Racine);
+        Racine = Inserer(new noeud.Cles(2,"Chalut"),Racine);
+        Racine = Inserer(new noeud.Cles(4,"Chalut"),Racine);
+
+        Racine = Inserer(new noeud.Cles(5,"Chalut"),Racine);
+        Racine = Inserer(new noeud.Cles(6,"Chalut"),Racine);
+        Racine = Inserer(new noeud.Cles(8,"Chalut"),Racine);
+        Racine = Inserer(new noeud.Cles(10,"Chalut"),Racine);
+
+        Racine = Inserer(new noeud.Cles(11,"Chalut"),Racine);
 
 
         AfficherArbre(Racine);
+
     }
 }
