@@ -19,7 +19,6 @@ public class arbre {
             if(Arbre.tabPointeur[indice] != null){
                 resultat = RechercherArbre(Valeur, Arbre.tabPointeur[indice]);
             }
-            else System.out.print("pointeur null ligne 22");
         }
         return resultat;
     }
@@ -52,9 +51,7 @@ public class arbre {
         noeud Pointeurtemp1, Pointeurtemp2 = null;
 
         for(int i = 0 ;  i < 2*M+1 ; i++){
-            System.out.println("NbdeCle : " + Arbre.NbCles + "  i : " + i);
-            if(Cles != null)System.out.println(Cles.Id);
-            //System.out.println(Arbre.tabCles[i].Id);
+
             if(Arbre.NbCles <= i)
             {
                 Clestemp = Arbre.tabCles[i];
@@ -92,9 +89,12 @@ public class arbre {
 
             noeud fils = new noeud(M);        //Creation d'un fils en plus du pere et de l'arbre actuel
             fils.pere = Arbre.pere;
+            if(Arbre.feuille == false){
+                fils.feuille = false;
+            }
 
 
-            //Arbre.pere = Inserer(Arbre.tabCles[M],Arbre.pere);      //On insere la valeur médiane dans le père
+             //On insere la valeur médiane dans le père
             InsererDsTab(Arbre.tabCles[M], Arbre.pere);
             if(Arbre.pere.NbCles == 2*M+1){
                 Arbre.pere = diviserRemonter(Arbre.pere);
@@ -106,17 +106,10 @@ public class arbre {
                 fils.tabCles[i-M-1] = Arbre.tabCles[i];
                 Arbre.tabCles[i] = null;
     
-                fils.tabPointeur[i-M] = Arbre.tabPointeur[i];
+                fils.tabPointeur[i-M-1] = Arbre.tabPointeur[i];
                 Arbre.tabPointeur[i] = null;
             }
 
-
-
-            /*for(int i = 1 ; i < M ; i++){ // La partie gauche du noeud divisé est accueillie en tant que fils du noeud de la valeur médiane insérée dans le père
-                Arbre.pere.tabPointeur[RechercherDansNoeud(Arbre.tabCles[M], Arbre.pere)].tabCles[i] = Arbre.tabCles[i];
-                Arbre.pere.tabPointeur[RechercherDansNoeud(Arbre.tabCles[M], Arbre.pere)].tabPointeur[i] = Arbre.tabPointeur[i];
-
-            }*/
 
             fils.NbCles = M;
             Arbre.NbCles = M;
@@ -156,20 +149,15 @@ public class arbre {
         Racine = Inserer(new noeud.Cles(9999,"Chalut"),Racine);
         Racine = Inserer(new noeud.Cles(752,"Chalut"),Racine);
         Racine = Inserer(new noeud.Cles(7152,"Chalut"),Racine);
-        //OK
-
         Racine = Inserer(new noeud.Cles(3,"Chalut"),Racine);
         Racine = Inserer(new noeud.Cles(2,"Chalut"),Racine);
         Racine = Inserer(new noeud.Cles(4,"Chalut"),Racine);
-
         Racine = Inserer(new noeud.Cles(5,"Chalut"),Racine);
         Racine = Inserer(new noeud.Cles(6,"Chalut"),Racine);
         Racine = Inserer(new noeud.Cles(8,"Chalut"),Racine);
         Racine = Inserer(new noeud.Cles(10,"Chalut"),Racine);
-
+        //OK
         Racine = Inserer(new noeud.Cles(11,"Chalut"),Racine);
-
-
         AfficherArbre(Racine);
 
     }
