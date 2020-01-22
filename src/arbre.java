@@ -141,6 +141,45 @@ public class arbre {
         return Arbre.pere;
     }
 
+    private static noeud SupprimerFeuille(int Id, noeud Arbre){
+
+        try{
+            int indice = RechercherDansNoeud(Id , Arbre);
+            Arbre.tabCles[indice] = null;
+            for(int i = indice ; i < 2*M ; i++){
+                   Arbre.tabCles[i] = Arbre.tabCles[i+1];
+            }
+            Arbre.NbCles--;
+        }
+        catch(Exception e)  {
+
+            System.out.println("\nLa feuille devant être supprimée n'existe pas :( ;( \n" + e);
+        }
+
+        return Arbre;
+    }
+
+    private static noeud Supprimer(int Id, noeud Arbre){
+
+        if(Arbre.getfeuille()){
+            //Cas 1 : La feuille comprend au moins M+1 élements
+            if(Arbre.NbCles > M){
+                 Arbre = SupprimerFeuille(Id,Arbre);
+            }                                                               //pas oublier de gerer le cas de la racine
+
+            //Cas 2 : La feuille comprend M élements
+            else if(Arbre.NbCles <= M){
+                int indice = RechercherDansNoeud(Id, Arbre.pere)+1;
+                while(Arbre.pere.tabPointeur[indice].NbCles <= M){
+                    
+                }
+            }
+
+        }
+
+        return null;
+    }
+
     /* ~~~~~~~~ FONCTIONS D'AFFICHAGE ~~~~~~~~ */
 
     private static void AfficherArbre(noeud Arbre) {
@@ -164,6 +203,7 @@ public class arbre {
         Racine = Inserer(new noeud.Cles(15,"Chalut"),Racine);
         Racine = Inserer(new noeud.Cles(21,"Chalut"),Racine);
         Racine = Inserer(new noeud.Cles(1,"Chalut"),Racine);
+        /*
         Racine = Inserer(new noeud.Cles(202,"Chalut"),Racine);
         Racine = Inserer(new noeud.Cles(2501,"Chalut"),Racine);
         Racine = Inserer(new noeud.Cles(9,"Chalut"),Racine);
@@ -182,8 +222,12 @@ public class arbre {
         Racine = Inserer(new noeud.Cles(11,"Chalut"),Racine);
         //OK
 
+        */
         AfficherArbre(Racine);
-        noeud.Cles Recherche = Rechercher(9999,Racine);
-        System.out.println(Recherche.Contenue);
+        //noeud.Cles Recherche = Rechercher(9999,Racine);
+        //System.out.println(Recherche.Contenue);
+
+        Racine = SupprimerFeuille(111, Racine);
+        AfficherArbre(Racine);
     }
 }
