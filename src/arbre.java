@@ -8,6 +8,25 @@ public class arbre {
 
     /* ~~~~~~~~ FONCTIONS DE RECHERCHE ~~~~~~~~ */
 
+    private static noeud.Cles Rechercher(int ClefId, noeud Arbre){
+        noeud.Cles Clef = null;
+
+        if(Arbre != null){
+            for(int i = 0; i < Arbre.NbCles ; i++){
+                if(ClefId == Arbre.tabCles[i].Id){
+                    Clef = Arbre.tabCles[i];
+                    break;
+                }
+                else if(ClefId < Arbre.tabCles[i].Id){
+                    Clef = Rechercher(ClefId, Arbre.tabPointeur[i]);
+                    break;
+                }
+            }
+            if(Clef == null) Clef = Rechercher(ClefId, Arbre.tabPointeur[Arbre.NbCles]);
+        }
+        return Clef;
+    }
+
     private static noeud RechercherArbre(noeud.Cles Valeur, noeud Arbre) {
         int indice = 0;
         noeud resultat = Arbre;
@@ -149,11 +168,11 @@ public class arbre {
         Racine = Inserer(new noeud.Cles(2501,"Chalut"),Racine);
         Racine = Inserer(new noeud.Cles(9,"Chalut"),Racine);
         Racine = Inserer(new noeud.Cles(7,"Chalut"),Racine);
-        Racine = Inserer(new noeud.Cles(9999,"Chalut"),Racine);
+        Racine = Inserer(new noeud.Cles(9999,"Chalt"),Racine);
         Racine = Inserer(new noeud.Cles(752,"Chalut"),Racine);
         Racine = Inserer(new noeud.Cles(7152,"Chalut"),Racine);
         Racine = Inserer(new noeud.Cles(3,"Chalut"),Racine);
-        Racine = Inserer(new noeud.Cles(2,"Chalut"),Racine);
+        Racine = Inserer(new noeud.Cles(2,"Chalute"),Racine);
         Racine = Inserer(new noeud.Cles(4,"Chalut"),Racine);
         Racine = Inserer(new noeud.Cles(5,"Chalut"),Racine);
         Racine = Inserer(new noeud.Cles(6,"Chalut"),Racine);
@@ -161,7 +180,10 @@ public class arbre {
         Racine = Inserer(new noeud.Cles(10,"Chalut"),Racine);
         //OK
         Racine = Inserer(new noeud.Cles(11,"Chalut"),Racine);
-        AfficherArbre(Racine);
+        //OK
 
+        AfficherArbre(Racine);
+        noeud.Cles Recherche = Rechercher(9999,Racine);
+        System.out.println(Recherche.Contenue);
     }
 }
