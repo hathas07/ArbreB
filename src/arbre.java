@@ -95,26 +95,29 @@ public class arbre {
 
 
              //On insere la valeur médiane dans le père
-            InsererDsTab(Arbre.tabCles[M], Arbre.pere);
-            if(Arbre.pere.NbCles == 2*M+1){
-                Arbre.pere = diviserRemonter(Arbre.pere);
-            }
+            Arbre. pere = InsererDsTab(Arbre.tabCles[M], Arbre.pere);
 
             Arbre.tabCles[M] = null;
 
-            for(int i = M+1 ; i < 2*M+1 ; i++){           //Le nouveau fils accueille la partie droite de l'arbre divisé
+            //Le nouveau fils accueille la partie droite de l'arbre divisé
+
+            for(int i = M+1 ; i < 2*M+1 ; i++){           //Partie Clef
                 fils.tabCles[i-M-1] = Arbre.tabCles[i];
                 Arbre.tabCles[i] = null;
-    
+            }
+
+            for(int i = M + 1 ; i <= 2*M+1 ; i++){       //Partie Pointeur
                 fils.tabPointeur[i-M-1] = Arbre.tabPointeur[i];
                 Arbre.tabPointeur[i] = null;
             }
-
-
             fils.NbCles = M;
             Arbre.NbCles = M;
 
             Arbre.pere.tabPointeur[RechercherDansNoeud(IdM, Arbre.pere)+1] = fils;
+
+            if(Arbre.pere.NbCles == 2*M+1){
+                Arbre.pere = diviserRemonter(Arbre.pere);
+            }
         }
         return Arbre.pere;
     }
