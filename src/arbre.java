@@ -119,7 +119,7 @@ public class arbre extends noeud{
 
 
              //On insere la valeur médiane dans le père
-            Arbre. pere = InsererDsTab(Arbre.tabCles[M], Arbre.pere);
+            Arbre.pere = InsererDsTab(Arbre.tabCles[M], Arbre.pere);
 
             Arbre.tabCles[M] = null;
 
@@ -164,6 +164,19 @@ public class arbre extends noeud{
         return Arbre;
     }
 
+    private static noeud Rotation(boolean Gauche,int indice_pere, noeud Arbre){
+        if(Gauche){
+            Arbre.pere.tabPointeur[indice_pere-1] = InsererDsTab(Arbre.pere.tabCles[indice_pere-1], Arbre.pere.tabPointeur[indice_pere-1]);
+            Arbre.pere.tabCles[indice_pere-1] = Arbre.tabCles[0];
+            Arbre = SupprimerFeuille(Arbre.tabCles[0].Id, Arbre);
+        }
+        else{
+            Arbre.pere.tabPointeur[indice_pere+1] = InsererDsTab(Arbre.pere.tabCles[indice_pere], Arbre.pere.tabPointeur[indice_pere+1]);
+            Arbre.pere.tabCles[indice_pere-1] = Arbre.tabCles[Arbre.NbCles-1];
+            Arbre = SupprimerFeuille(Arbre.tabCles[0].Id, Arbre);
+        }
+        return Arbre;
+    }
     public static noeud Supprimer(int Id, noeud Arbre){
         Arbre = RechercherArbre(Id, Arbre);
 
@@ -196,13 +209,13 @@ public class arbre extends noeud{
                         Arbre = SupprimerFeuille(Id, Arbre);
                         if(indice - indice_gauche <= indice_droit - indice){
                             while(indice_gauche < indice){
-                                //rotation à droite;
+                                Arbre = Rotation(true,indice_gauche, Arbre);
                                 indice_gauche++;
                             }
                         }
                         else{
                             while(indice_droit > indice){
-                                //rotation à gauche;
+                                Arbre = Rotation(false, indice_droit, Arbre);
                                 indice_droit--;
                             }
                         }
