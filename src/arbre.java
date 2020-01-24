@@ -1,14 +1,19 @@
 import java.awt.image.renderable.ParameterBlock;
 import java.util.*;
 
-public class arbre {
+public class arbre extends noeud{
 
-    protected static int M;
-    protected static noeud Racine;
+    public static int M;
+
+    public arbre(int M){
+        super(M);
+        M = M;
+    }
+
 
     /* ~~~~~~~~ FONCTIONS DE RECHERCHE ~~~~~~~~ */
 
-    private static noeud.Cles Rechercher(int ClefId, noeud Arbre){
+    public static arbre.Cles Rechercher(int ClefId, noeud Arbre){
         noeud.Cles Clef = null;
 
         if(Arbre != null){
@@ -27,12 +32,12 @@ public class arbre {
         return Clef;
     }
 
-    private static noeud RechercherArbre(noeud.Cles Valeur, noeud Arbre) {
+    private static noeud RechercherArbre(int Valeur, noeud Arbre) {
         int indice = 0;
         noeud resultat = Arbre;
-        if (Arbre.getfeuille() != true) {
+        if (!Arbre.getfeuille()) {
 
-            while (indice < Arbre.NbCles && Valeur.Id > Arbre.tabCles[indice].Id) {
+            while (indice < Arbre.NbCles && Valeur > Arbre.tabCles[indice].Id) {
                 indice++;
             }
             if(Arbre.tabPointeur[indice] != null){
@@ -52,8 +57,8 @@ public class arbre {
 
     /* ~~~~~~~~ FONCTIONS D'INSERTION ET DE MODIFICATION DE L'ARBRE ~~~~~~~~ */
 
-    private static noeud Inserer(noeud.Cles Cles, noeud Arbre){
-        Arbre = RechercherArbre(Cles, Arbre);
+    public static noeud Inserer(noeud.Cles Cles, noeud Arbre){
+        Arbre = RechercherArbre(Cles.Id, Arbre);
         InsererDsTab(Cles, Arbre);
         if(Arbre.NbCles == 2*M+1){
             Arbre = diviserRemonter(Arbre);
@@ -108,7 +113,7 @@ public class arbre {
 
             noeud fils = new noeud(M);        //Creation d'un fils en plus du pere et de l'arbre actuel
             fils.pere = Arbre.pere;
-            if(Arbre.feuille == false){
+            if(!Arbre.getfeuille()){
                 fils.feuille = false;
             }
 
@@ -159,30 +164,73 @@ public class arbre {
         return Arbre;
     }
 
-    private static noeud Supprimer(int Id, noeud Arbre){
+    public static noeud Supprimer(int Id, noeud Arbre){
+        Arbre = RechercherArbre(Id, Arbre);
 
-        if(Arbre.getfeuille()){
-            //Cas 1 : La feuille comprend au moins M+1 élements
-            if(Arbre.NbCles > M){
-                 Arbre = SupprimerFeuille(Id,Arbre);
-            }                                                               //pas oublier de gerer le cas de la racine
+        if(Arbre != null) {
 
-            //Cas 2 : La feuille comprend M élements
-            else if(Arbre.NbCles <= M){
-                int indice = RechercherDansNoeud(Id, Arbre.pere)+1;
-                while(Arbre.pere.tabPointeur[indice].NbCles <= M){
-                    
+            if (Arbre.getfeuille()) {
+                //Cas 1 : La feuille comprend au moins M+1 élements
+                if (Arbre.NbCles > M) {
+                    Arbre = SupprimerFeuille(Id, Arbre);
+                }                                                                  //pas oublier de gerer le cas de la racine
+
+                //Cas 2 : La feuille comprend M élements
+                else if (Arbre.NbCles == M) {
+                    int indice = RechercherDansNoeud(Id, Arbre.pere);
+                    int indice_gauche = indice-1;
+                    int indice_droit = indice+1;
+
+                    //On recherche à gauche le premier frère comprenant plus de M élements
+                    while (Arbre.pere.tabPointeur[indice_gauche].NbCles <= M && indice_gauche >= 0) {
+                        indice_gauche--;
+                    }
+
+                    //On recherche à droite le premier frère comprenant plus de M élements
+                    while (Arbre.pere.tabPointeur[indice_droit].NbCles <= M && indice_droit <= 2*M){
+                        indice_droit++;
+                    }
+
+                    //Cas où il existe un frère possédant au moins M+1 éléments
+                    if(indice_gauche >= 0 && indice_droit <= 2*M){
+                        Arbre = SupprimerFeuille(Id, Arbre);
+                        if(indice - indice_gauche <= indice_droit - indice){
+                            while(indice_gauche < indice){
+                                //rotation à droite;
+                                indice_gauche++;
+                            }
+                        }
+                        else{
+                            while(indice_droit > indice){
+                                //rotation à gauche;
+                                indice_droit--;
+                            }
+                        }
+                    }
+
+                    else if(indice_gauche >= 0){
+
+                    }
+
+                    else if(indice_droit <= 2*M){
+
+                    }
+
+                    //Cas où il n'existe pas un frère possédant au moins M+1 éléments
+                    else{
+
+                    }
                 }
+
             }
-
         }
-
-        return null;
+        else System.out.println("La clef à supprimer n'existe pas");
+        return Arbre;
     }
 
     /* ~~~~~~~~ FONCTIONS D'AFFICHAGE ~~~~~~~~ */
 
-    private static void AfficherArbre(noeud Arbre) {
+    public static void AfficherArbre(noeud Arbre) {
         System.out.println("");
         for(int i = 0 ; i < Arbre.NbCles ; i++){
             System.out.print("|" + Arbre.tabCles[i].Id+" " + Arbre.tabCles[i].Contenue + "|  ");
@@ -195,7 +243,7 @@ public class arbre {
     }
 
     /* ~~~~~~~~ MAIN ~~~~~~~~ */
-
+    /*
     public static void main(String[] args){
         M = 2;
         noeud Racine = new noeud(M);
@@ -203,7 +251,7 @@ public class arbre {
         Racine = Inserer(new noeud.Cles(15,"Chalut"),Racine);
         Racine = Inserer(new noeud.Cles(21,"Chalut"),Racine);
         Racine = Inserer(new noeud.Cles(1,"Chalut"),Racine);
-        /*
+
         Racine = Inserer(new noeud.Cles(202,"Chalut"),Racine);
         Racine = Inserer(new noeud.Cles(2501,"Chalut"),Racine);
         Racine = Inserer(new noeud.Cles(9,"Chalut"),Racine);
@@ -221,13 +269,14 @@ public class arbre {
         //OK
         Racine = Inserer(new noeud.Cles(11,"Chalut"),Racine);
         //OK
+        Racine = Inserer(new noeud.Cles(42, 42), Racine);
 
-        */
         AfficherArbre(Racine);
         //noeud.Cles Recherche = Rechercher(9999,Racine);
         //System.out.println(Recherche.Contenue);
 
-        Racine = SupprimerFeuille(111, Racine);
-        AfficherArbre(Racine);
+        //Racine = SupprimerFeuille(111, Racine);
+        //AfficherArbre(Racine);
     }
+    */
 }
